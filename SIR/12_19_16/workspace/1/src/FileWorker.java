@@ -14,6 +14,7 @@ public class FileWorker {
 	private static List<String> prenoms;
 	private static List<String> themes;
 	private static int[][] array;
+	private static int[][] array2;
 	
 	public FileWorker(){
 		this.prenoms = new ArrayList<String>();
@@ -21,16 +22,18 @@ public class FileWorker {
 		this.Liste1 = new ArrayList<String>();
 		this.Liste2 = new ArrayList<String>();
 		this.array = new int[0][0]; 
+		this.array2 = new int[0][0]; 
 	}
 	public static void main(String[] args) throws FileNotFoundException {
 		FileWorker fr = new FileWorker();
 		fr.read(fileName);
-		String textFromFile = FileWorker.read(fileName);
-		//System.out.println(textFromFile);
 		System.out.println(prenoms);
 		System.out.println(themes);
 		fr.createMatrix();
-		fr.printMatrix();		
+		fr.createMatrix2();
+		fr.printMatrix();
+		System.out.println();
+		fr.printMatrix2();
 	}
 	
 	public static String read(String fileName) throws FileNotFoundException {
@@ -75,7 +78,7 @@ public class FileWorker {
 	            /*
 	             * Initializing the matrix with real size
 	             */
-	            array = new int[prenoms.size()][themes.size()];
+	            
 	            
 	           
 	        } finally {
@@ -88,13 +91,15 @@ public class FileWorker {
 	}
 
 	public void createMatrix(){
+		array = new int[prenoms.size()][themes.size()];
 		for (int i = 0; i < Liste1.size(); i++){
 			int x = prenoms.indexOf(Liste1.get(i));
 			int y = themes.indexOf(Liste2.get(i));
 			array[x][y] += 1;
 		}
+		
 	}
-	
+		
 	private static void exists(String fileName) throws FileNotFoundException {
 	    File file = new File(fileName);
 	    if (!file.exists()){
@@ -110,5 +115,52 @@ public class FileWorker {
 		}
 	}
 	
-} 
+	public int summ(int[] a){
+		int summLine=0;
+			for (int i=0;i<a.length;i++){  
+				summLine+= a[i];   
+		}
+		return summLine;
+	}
+	
+	public void createMatrix2(){
+		int[] sum = new int[prenoms.size()];
+		array2 = new int[themes.size()][themes.size()];
+		for (int i=0; i < themes.size(); i++){
+			for (int j = 0; j < prenoms.size(); j++) {
+				sum[j] =  array[j][i];
+			}
+			array2 [i][i] = summ(sum);
+			for (int w=0; w<themes.size();w++){
+				if( w != i){
+					int[] sum2 = {array2[w][w], array2[i][i]};
+					//System.out.print(summ(sum2) + " ");
+					array2[w][i]= summ(sum2);
+					array2[i][w]=summ(sum2);
+				}
+				
+			}
+		}
+		
+	
+		
+		
+	}
+	
+	public void printMatrix2(){
+		for (int i = 0; i < array2.length;i++){
+			for (int j = 0; j < array2[i].length; j++)
+				System.out.print(array2[i][j]+" ");
+			System.out.println();
+		}
+	}
+}
+
+
+	
+	
+
+	  
+
+
 
